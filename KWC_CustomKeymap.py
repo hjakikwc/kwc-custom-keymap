@@ -155,21 +155,20 @@ def register():
 		kmi.properties.mesh_select_mode = {'FACE'}
 
 		#ポーズモード
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'THREE',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set",type= 'THREE',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'POSE'
-		kmi.properties.mesh_select_mode = {'VERT'}
 
 	#Pose
 	km = kc.keymaps.new(name="Pose", space_type="EMPTY")
 	if kc:
 		#オブジェクトモード
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'TAB',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set",type= 'TAB',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'OBJECT'
 
 		#オブジェクトモード
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'FOUR',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set",type= 'FOUR',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'OBJECT'
 
@@ -314,7 +313,7 @@ def register():
 		kmi.properties.mesh_select_mode = {'FACE'}
 
 		#オブジェクトモード
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'FOUR',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set",type= 'FOUR',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'OBJECT'
 
