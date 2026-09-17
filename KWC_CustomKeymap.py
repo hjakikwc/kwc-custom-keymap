@@ -26,21 +26,6 @@ bl_info = {
 	"category": "UI",
 }
 
-#公開用のinfo。↑のinfoは消す
-# 
-# bl_info = {
-# 	"name": "KWC Custom Keymap",
-# 	"author": "Hayano",
-# 	"version" : (1, 0, 1),
-# 	"blender" : (3, 6, 8),
-# 	"description": "Custom key maps",
-# 	"warning": "",
-# 	"category": "UI",
-# }
-# 
-# 公開用のinfoここまで
-
-
 import bpy
 from bpy.props import *
 from bpy.types import AddonPreferences
@@ -148,6 +133,9 @@ def register():
 		addon_keymaps.append((km, kmi))
 		kmi.properties.name = "builtin.select_circle"
 
+	#Object Mode
+	km = kc.keymaps.new(name="Object Mode", space_type="EMPTY")
+	if kc:
 		#頂点モード
 		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'ONE',value="PRESS")
 		addon_keymaps.append((km, kmi))
@@ -172,14 +160,16 @@ def register():
 		kmi.properties.mode = 'POSE'
 		kmi.properties.mesh_select_mode = {'VERT'}
 
+	#Pose
+	km = kc.keymaps.new(name="Pose", space_type="EMPTY")
+	if kc:
 		#オブジェクトモード
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'FOUR',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'TAB',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'OBJECT'
 
 		#オブジェクトモード
-		km = wm.keyconfigs.addon.keymaps.new('Pose')
-		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'TAB',value="PRESS")
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'FOUR',value="PRESS")
 		addon_keymaps.append((km, kmi))
 		kmi.properties.mode = 'OBJECT'
 
@@ -305,6 +295,29 @@ def register():
 	#Mesh
 	km = kc.keymaps.new(name="Mesh", space_type="EMPTY")
 	if kc:
+		#頂点モード
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'ONE',value="PRESS")
+		addon_keymaps.append((km, kmi))
+		kmi.properties.mode = 'EDIT'
+		kmi.properties.mesh_select_mode = {'VERT'}
+
+		#辺モード
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'TWO',value="PRESS")
+		addon_keymaps.append((km, kmi))
+		kmi.properties.mode = 'EDIT'
+		kmi.properties.mesh_select_mode = {'EDGE'}
+
+		#面モード
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'THREE',value="PRESS")
+		addon_keymaps.append((km, kmi))
+		kmi.properties.mode = 'EDIT'
+		kmi.properties.mesh_select_mode = {'FACE'}
+
+		#オブジェクトモード
+		kmi = km.keymap_items.new("object.mode_set_with_submode",type= 'FOUR',value="PRESS")
+		addon_keymaps.append((km, kmi))
+		kmi.properties.mode = 'OBJECT'
+
 		#ループ選択
 		kmi = km.keymap_items.new("mesh.loop_select",type= 'LEFTMOUSE',value="DOUBLE_CLICK")
 		addon_keymaps.append((km, kmi))
@@ -338,7 +351,6 @@ def register():
 		addon_keymaps.append((km, kmi))
 
 
-#公開時ここから下を削除
 		#Merge Tool(アドオン：Merge Tool)
 		kmi = km.keymap_items.new("wm.tool_set_by_id",type='W',value="PRESS",ctrl=True)
 		addon_keymaps.append((km, kmi))
@@ -372,7 +384,6 @@ def register():
 		# kmi = km.keymap_items.new_modal(propvalue='Decrease Proportional influence',type='LEFT_BRACKET',value="PRESS",repeat=True)
 		# addon_keymaps.append((km, kmi))
 
-#公開時削除ここまで
 
 def unregister():
 	for cls in reversed(classes):
