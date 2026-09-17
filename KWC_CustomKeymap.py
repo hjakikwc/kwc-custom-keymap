@@ -48,33 +48,17 @@ class KWC_KEYMAP_AddonPreferences(AddonPreferences):
 			col = box.column()
 			col.label(text="Keymap List:")
 
-			wm = bpy.context.window_manager
-			kc = wm.keyconfigs.user
+			kc = context.window_manager.keyconfigs.user
 			old_km_name = ""
-			old_id_l = []
 
-			for km_add, kmi_add in addon_keymaps:
-				for km_con in kc.keymaps:
-					if km_add.name == km_con.name:
-						km = km_con
-						break
-
-				for kmi_con in km.keymap_items:
-					if kmi_add.idname == kmi_con.idname:
-
-						if not kmi_con.id in old_id_l:
-							kmi = kmi_con
-							old_id_l.append(kmi_con.id)
-							break
-
-				try:
-					if not km.name == old_km_name:
-						col.label(text=str(km.name),icon="DOT")
-					col.context_pointer_set("keymap", km)
-					rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
-					col.separator()
+			for km, kmi in addon_keymaps:
+				km = km.active()
+				if km.name != old_km_name:
+					col.label(text=km.name, icon="DOT")
 					old_km_name = km.name
-				except: pass
+				col.context_pointer_set("keymap", km)
+				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
+				col.separator()
 
 
 		if self.tab_addon_menu=="LINK":
