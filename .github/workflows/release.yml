@@ -7,23 +7,20 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: release-extension
   cancel-in-progress: false
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    outputs:
-      zip_name: ${{ steps.meta.outputs.zip_name }}
-      archive_url: ${{ steps.meta.outputs.archive_url }}
-      repository_url: ${{ steps.meta.outputs.repository_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Resolve version
         id: meta
@@ -62,7 +59,6 @@ jobs:
           REPOSITORY_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/index.json"
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "extension_id=$EXTENSION_ID" >> "$GITHUB_OUTPUT"
           echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
           echo "archive_url=$ARCHIVE_URL" >> "$GITHUB_OUTPUT"
           echo "repository_url=$REPOSITORY_URL" >> "$GITHUB_OUTPUT"
@@ -72,20 +68,14 @@ jobs:
           set -euo pipefail
           zip "${{ steps.meta.outputs.zip_name }}" __init__.py blender_manifest.toml
 
-      - name: Generate Pages index
+      - name: Generate docs index
         run: |
           set -euo pipefail
           python3 scripts/generate_extension_index.py \
             "${{ steps.meta.outputs.zip_name }}" \
             "${{ steps.meta.outputs.archive_url }}" \
-            site \
+            docs \
             "${{ steps.meta.outputs.repository_url }}"
-
-      - name: Upload site artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site
-          path: site
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -94,24 +84,15 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: true
 
-  deploy-pages:
-    needs: release
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site
-          path: site
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-      - name: Deploy GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish docs to main
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.json docs/index.html
+          if git diff --cached --quiet; then
+            echo "No docs changes"
+            exit 0
+          fi
+          git commit -m "Update extension index for ${GITHUB_REF_NAME}"
+          git push origin HEAD:main
