@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "kwc_custom_keymap"
-version = "1.0.8"
+version = "2.0.0"
 name = "KWC Custom Keymap"
 tagline = "Custom key maps for Blender"
 maintainer = "hjaki"
