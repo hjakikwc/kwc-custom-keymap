@@ -1,0 +1,97 @@
+name: Release Extension
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: meta
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag must look like v1.0.8 (got: $TAG)"
+            exit 1
+          fi
+
+          MANIFEST_VERSION="$(python3 - <<'PY'
+          import tomllib
+          from pathlib import Path
+          data = tomllib.loads(Path("blender_manifest.toml").read_text(encoding="utf-8"))
+          print(data["version"])
+          PY
+          )"
+          EXTENSION_ID="$(python3 - <<'PY'
+          import tomllib
+          from pathlib import Path
+          data = tomllib.loads(Path("blender_manifest.toml").read_text(encoding="utf-8"))
+          print(data["id"])
+          PY
+          )"
+
+          if [[ "$MANIFEST_VERSION" != "$VERSION" ]]; then
+            echo "Tag version ($VERSION) must match blender_manifest.toml ($MANIFEST_VERSION)"
+            exit 1
+          fi
+
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          ZIP_NAME="${EXTENSION_ID}-${VERSION}.zip"
+          ARCHIVE_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/${ZIP_NAME}"
+          REPOSITORY_URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}/index.json"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "extension_id=$EXTENSION_ID" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+          echo "archive_url=$ARCHIVE_URL" >> "$GITHUB_OUTPUT"
+          echo "repository_url=$REPOSITORY_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Build zip
+        run: |
+          set -euo pipefail
+          zip "${{ steps.meta.outputs.zip_name }}" __init__.py blender_manifest.toml
+
+      - name: Generate Pages index
+        run: |
+          set -euo pipefail
+          python3 scripts/generate_extension_index.py \
+            "${{ steps.meta.outputs.zip_name }}" \
+            "${{ steps.meta.outputs.archive_url }}" \
+            site \
+            "${{ steps.meta.outputs.repository_url }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.meta.outputs.zip_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
