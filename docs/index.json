@@ -7,16 +7,16 @@
       "id": "kwc_custom_keymap",
       "name": "KWC Custom Keymap",
       "tagline": "Custom key maps for Blender",
-      "version": "1.0.8",
+      "version": "2.0.0",
       "type": "add-on",
       "maintainer": "hjaki",
       "license": [
         "SPDX:GPL-3.0-or-later"
       ],
       "blender_version_min": "4.2.0",
-      "archive_url": "https://github.com/hjakikwc/kwc_custom_keymap/releases/download/v1.0.8/kwc_custom_keymap-1.0.8.zip",
-      "archive_size": 3128,
-      "archive_hash": "sha256:d2cadef5352cfc8b00d86d203658d089166c41c17c7875c22e636b6541e6da67",
+      "archive_url": "https://github.com/hjakikwc/kwc_custom_keymap/releases/download/v2.0.0/kwc_custom_keymap-2.0.0.zip",
+      "archive_size": 3127,
+      "archive_hash": "sha256:3caaa2b4858fd3b69e270f6aaa62fa6bf33212ac66d1b9df63b51000a62fded6",
       "website": "https://kwc.booth.pm/items/5506923",
       "tags": [
         "User Interface"
