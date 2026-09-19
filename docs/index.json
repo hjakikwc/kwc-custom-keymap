@@ -14,7 +14,7 @@
         "SPDX:GPL-3.0-or-later"
       ],
       "blender_version_min": "4.2.0",
-      "archive_url": "https://github.com/hjakikwc/kwc_custom_keymap/releases/download/v2.0.0/kwc_custom_keymap-2.0.0.zip",
+      "archive_url": "https://github.com/hjakikwc/kwc-custom-keymap/releases/download/v2.0.0/kwc_custom_keymap-2.0.0.zip",
       "archive_size": 3127,
       "archive_hash": "sha256:3caaa2b4858fd3b69e270f6aaa62fa6bf33212ac66d1b9df63b51000a62fded6",
       "website": "https://kwc.booth.pm/items/5506923",
