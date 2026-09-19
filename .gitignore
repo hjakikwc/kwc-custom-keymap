@@ -39,6 +39,10 @@ htmlcov/
 # pyenv
 # .python-version
 
+### Cursor
+# Shared rules are linked from the sandbox repo; do not commit local copies
+.cursor/
+
 ### Windows
 # Windows thumbnail cache files
 Thumbs.db
