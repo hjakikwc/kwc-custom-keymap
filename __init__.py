@@ -55,7 +55,7 @@ class KWC_KEYMAP_AddonPreferences(AddonPreferences):
 		if self.tab_addon_menu=="LINK":
 			row = layout.row()
 			row.label(text="Link:")
-			row.operator( "wm.url_open", text="Booth").url = "https://kwc.booth.pm/items/5506923"
+			row.operator( "wm.url_open", text="Booth").url = "https://kwc.booth.pm/"
 
 classes = (KWC_KEYMAP_AddonPreferences,)
 
