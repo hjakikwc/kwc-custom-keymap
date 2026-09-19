@@ -1,0 +1,30 @@
+schema_version = "1.0.0"
+
+id = "kwc_custom_keymap"
+version = "1.0.8"
+name = "KWC Custom Keymap"
+tagline = "Custom key maps for Blender"
+maintainer = "hjaki"
+type = "add-on"
+
+website = "https://kwc.booth.pm/items/5506923"
+
+tags = ["User Interface"]
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+copyright = [
+  "2024 Hayano",
+]
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "/.git/",
+  "/*.zip",
+  "/.gitignore",
+]

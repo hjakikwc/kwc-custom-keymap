@@ -1,44 +1,35 @@
 # KWC Custom Keymap (C)2024 Hayano
-# 
+#
 # ##### BEGIN GPL LICENSE BLOCK #####
-# 
-# This program is free software: 
-# you can redistribute it and/or modify it under the terms of 
-# the GNU General Public License as published by the Free Software Foundation, 
+#
+# This program is free software:
+# you can redistribute it and/or modify it under the terms of
+# the GNU General Public License as published by the Free Software Foundation,
 # either version 3 of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License along with this program. 
+#
+# You should have received a copy of the GNU General Public License along with this program.
 # If not, see <https://www.gnu.org/licenses/>.
 #
 # ##### END GPL LICENCE BLOCK #####
-
-bl_info = {
-	"name": "KWC Custom Keymap",
-	"author": "hjaki",
-	"version" : (1, 0, 8),
-	"blender" : (3, 6, 8),
-	"description": "Custom key maps",
-	"warning": "",
-	"category": "UI",
-}
 
 import bpy
 from bpy.props import *
 from bpy.types import AddonPreferences
 import rna_keymap_ui
 
+
 class KWC_KEYMAP_AddonPreferences(AddonPreferences):
-	bl_idname = __name__
+	bl_idname = __package__
 
 	tab_addon_menu : EnumProperty(name="tab", description="", items=[('KEYMAP',"Keymap","","EVENT_A",0),('LINK', "Link", "","URL",1)],default='KEYMAP')
 
 	def draw(self, context):
 		layout = self.layout
-		
+
 		row = layout.row(align=True)
 		row.prop(self, "tab_addon_menu",expand=True)
 
@@ -66,7 +57,7 @@ class KWC_KEYMAP_AddonPreferences(AddonPreferences):
 			row.label(text="Link:")
 			row.operator( "wm.url_open", text="Booth").url = "https://kwc.booth.pm/items/5506923"
 
-classes = (KWC_KEYMAP_AddonPreferences,)	
+classes = (KWC_KEYMAP_AddonPreferences,)
 
 addon_keymaps = []
 def register():
@@ -157,7 +148,7 @@ def register():
 
 	#2D View
 	km = kc.keymaps.new(name="View2D", space_type="EMPTY")
-	
+
 	#視点の移動
 	kmi = km.keymap_items.new("view2d.pan",type= 'LEFTMOUSE',value="PRESS",alt=True)
 	addon_keymaps.append((km, kmi))
@@ -170,7 +161,7 @@ def register():
 	kmi = km.keymap_items.new("view2d.zoom",type= 'RIGHTMOUSE',value="PRESS",alt=True)
 	addon_keymaps.append((km, kmi))
 
-	#2D View Button List 
+	#2D View Button List
 	km = kc.keymaps.new(name="View2D Buttons List", space_type="EMPTY")
 	#視点の移動
 	kmi = km.keymap_items.new("view2d.pan",type= 'LEFTMOUSE',value="PRESS",alt=True)
@@ -222,7 +213,7 @@ def register():
 	kmi = km.keymap_items.new("wm.tool_set_by_id",type= 'C',value="PRESS")
 	addon_keymaps.append((km, kmi))
 	kmi.properties.name = "builtin.select_circle"
-	
+
 	#UV
 	km = kc.keymaps.new(name="UV Editor", space_type="EMPTY")
 	#移動モード
@@ -307,7 +298,7 @@ def register():
 	kmi = km.keymap_items.new("mesh.loop_select",type= 'LEFTMOUSE',value="DOUBLE_CLICK",shift=True,alt=True)
 	addon_keymaps.append((km, kmi))
 	kmi.properties.deselect = True
-	
+
 	#エッジリング選択
 	kmi = km.keymap_items.new("mesh.edgering_select",type= 'LEFTMOUSE',value="DOUBLE_CLICK",ctrl=True)
 	addon_keymaps.append((km, kmi))
@@ -349,7 +340,7 @@ def register():
 	#Transform Modal Map
 	# km = kc.keymaps.new(name="Transform Modal Map", space_type="EMPTY")
 	# if kc:
-	
+
 	#モーダルマップじゃないと言われて適用できない
 
 	# #プロポーショナルの影響を増加

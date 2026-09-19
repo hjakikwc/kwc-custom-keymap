@@ -12,6 +12,7 @@ build/
 dist/
 *.egg-info/
 *.egg
+*.zip
 
 # dotenv environment variable files
 .env
