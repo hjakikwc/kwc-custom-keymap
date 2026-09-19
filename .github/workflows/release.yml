@@ -17,9 +17,10 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      zip_name: ${{ steps.meta.outputs.zip_name }}
+      archive_url: ${{ steps.meta.outputs.archive_url }}
+      repository_url: ${{ steps.meta.outputs.repository_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -80,12 +81,31 @@ jobs:
             site \
             "${{ steps.meta.outputs.repository_url }}"
 
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ steps.meta.outputs.zip_name }}
           generate_release_notes: true
           fail_on_unmatched_files: true
+
+  deploy-pages:
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
